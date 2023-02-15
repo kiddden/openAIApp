@@ -21,6 +21,7 @@ class ChatVC: UIViewController {
     private func congifureVC() {
         // Congifuring NavigationBar
         title = "Chat"
+        navigationController?.navigationBar.tintColor = .systemPurple
         
         // Configuring SwiftUI View
         let messagesView = UIHostingController(rootView: ChatMessagesView())
