@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ChatMessagesView: View {
-    @State var chatMessages: [ChatMessage] = ChatMessage.sampleMessages
-    @State var messageText: String = ""
+    @State private var chatMessages: [ChatMessage] = ChatMessage.sampleMessages
+    @State private var messageText: String = ""
+    @State private var isSendButtonTapped = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -21,8 +22,20 @@ struct ChatMessagesView: View {
     
     private var messagesView: some View {
         ScrollView {
-            ForEach(chatMessages, id: \.id) { message in
-                SingleMessageView(forMessage: message.content, sentAt: message.dateCreated, from: message.sender)
+            ScrollViewReader { scrollView in
+                ForEach(chatMessages, id: \.id) { message in
+                    SingleMessageView(forMessage: message.content, sentAt: message.dateCreated, from: message.sender)
+                        .id(message.id)
+                        .padding(.bottom, message == chatMessages.last ? Constants.scrollViewBottomPadding : 0)
+                }
+                .onAppear {
+                    scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+                }
+                .onChange(of: chatMessages) { _ in
+                    withAnimation {
+                        scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+                    }
+                }
             }
         }
     }
@@ -31,23 +44,34 @@ struct ChatMessagesView: View {
         HStack(spacing: 0) {
             TextField("Enter a message", text: $messageText)
                 .padding(.bottom)
-            //                .background(Color.red)
+            
             Button {
-                print("Sender")
+                withAnimation {
+                    isSendButtonTapped = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        isSendButtonTapped = false
+                    }
+                }
+
+                chatMessages.append(ChatMessage(id: UUID().uuidString, content: "New message \(UUID().uuidString)", dateCreated: Date(), sender: .user))
             } label: {
                 Image(systemName: SFSymbols.send)
                     .resizable()
                     .frame(width: Constants.sendButtonSize, height: Constants.sendButtonSize)
                     .tint(Color(.systemPurple))
+                    .rotationEffect(.degrees(isSendButtonTapped ? 360 : 0))
+                    .scaleEffect(isSendButtonTapped ? 1.1 : 1.0)
             }
+            .animation(isSendButtonTapped ? Animation.spring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5) : nil)
         }
         .padding()
-        //        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Constants.bottomContainerCornerRadius))
     }
     
     private enum Constants {
         static let sendButtonSize: CGFloat = 32
+        static let bottomContainerCornerRadius: CGFloat = 16
+        static let scrollViewBottomPadding: CGFloat = 75
     }
 }
 
@@ -66,8 +90,13 @@ extension ChatMessage {
         ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
         ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
         ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
+        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
         ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT)
+        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
+        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
+        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
+        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
+        ChatMessage(id: UUID().uuidString, content: "Sample message sample message14", dateCreated: Date(), sender: .chatGPT)
     ]
 }
 

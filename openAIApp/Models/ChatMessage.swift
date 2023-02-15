@@ -11,7 +11,7 @@ enum MessageSender {
     case user, chatGPT
 }
 
-struct ChatMessage {
+struct ChatMessage: Equatable {
     let id: String
     let content: String
     let dateCreated: Date
