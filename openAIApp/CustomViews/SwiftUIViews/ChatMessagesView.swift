@@ -6,37 +6,52 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ChatMessagesView: View {
-    @State private var chatMessages: [ChatMessage] = ChatMessage.sampleMessages
+    @State private var chatMessages: [ChatMessage] = []//ChatMessage.sampleMessages
     @State private var messageText: String = ""
     @State private var isSendButtonTapped = false
+    
+    @State var cancellables = Set<AnyCancellable>()
+    
+    let openAIService = OpenAIService()
     
     var body: some View {
         VStack(spacing: 0) {
             messagesView
                 .overlay(buttonPannelView, alignment: .bottom)
         }
+        
         .edgesIgnoringSafeArea(.bottom)
     }
     
     private var messagesView: some View {
-        ScrollView {
-            ScrollViewReader { scrollView in
-                ForEach(chatMessages, id: \.id) { message in
-                    SingleMessageView(forMessage: message.content, sentAt: message.dateCreated, from: message.sender)
-                        .id(message.id)
-                        .padding(.bottom, message == chatMessages.last ? Constants.scrollViewBottomPadding : 0)
-                }
-                .onAppear {
-                    scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
-                }
-                .onChange(of: chatMessages) { _ in
-                    withAnimation {
-                        scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+        VStack {
+            ScrollView {
+                if chatMessages.isEmpty {
+                    ChatEmptyStateView(delegate: self)
+                        .padding(.horizontal, 4)
+                        .padding(.bottom, Constants.scrollViewBottomPadding)
+                } else {
+                    ScrollViewReader { scrollView in
+                        ForEach(chatMessages, id: \.id) { message in
+                            SingleMessageView(forMessage: message.content, sentAt: message.dateCreated, from: message.sender)
+                                .id(message.id)
+                                .padding(.bottom, message == chatMessages.last ? Constants.scrollViewBottomPadding : 0)
+                        }
+                        .onAppear {
+                            scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+                        }
+                        .onChange(of: chatMessages) { _ in
+                            withAnimation {
+                                scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+                            }
+                        }
                     }
                 }
             }
+            .frame(minWidth: 0, maxWidth: .infinity)
         }
     }
     
@@ -46,14 +61,15 @@ struct ChatMessagesView: View {
                 .padding(.bottom)
             
             Button {
-                withAnimation {
-                    isSendButtonTapped = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                        isSendButtonTapped = false
+                if !messageText.isEmpty {
+                    withAnimation {
+                        isSendButtonTapped = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            isSendButtonTapped = false
+                        }
                     }
+                    send(message: messageText)
                 }
-
-                chatMessages.append(ChatMessage(id: UUID().uuidString, content: "New message \(UUID().uuidString)", dateCreated: Date(), sender: .user))
             } label: {
                 Image(systemName: SFSymbols.send)
                     .resizable()
@@ -66,6 +82,21 @@ struct ChatMessagesView: View {
         }
         .padding()
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Constants.bottomContainerCornerRadius))
+    }
+    
+    private func send(message: String) {
+        let userMessage = ChatMessage(id: UUID().uuidString, content: messageText, dateCreated: Date(), sender: .user)
+        chatMessages.append(userMessage)
+        
+        openAIService.send(message: messageText).sink { error in
+            print(error)
+        } receiveValue: { response in
+            guard let text = response.choices.first?.text.trimmingCharacters(in: .whitespacesAndNewlines.union(.init(charactersIn: "\""))) else { return }
+            let chatGPTMessage = ChatMessage(id: response.id, content: text, dateCreated: Date(), sender: .chatGPT)
+            chatMessages.append(chatGPTMessage)
+        }
+        .store(in: &cancellables)
+        messageText = ""
     }
     
     private enum Constants {
@@ -81,24 +112,18 @@ struct ChatMessagesView_Previews: PreviewProvider {
     }
 }
 
-extension ChatMessage {
-    static let sampleMessages = [
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .chatGPT),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message", dateCreated: Date(), sender: .user),
-        ChatMessage(id: UUID().uuidString, content: "Sample message sample message14", dateCreated: Date(), sender: .chatGPT)
-    ]
+extension ChatMessagesView: EmptyStatePointViewDelegate {
+    
+    func didTapOnExample(text: String) {
+        openAIService.send(message: text).sink { error in
+            print(error)
+        } receiveValue: { response in
+            guard let text = response.choices.first?.text.trimmingCharacters(in: .whitespacesAndNewlines.union(.init(charactersIn: "\""))) else { return }
+            let chatGPTMessage = ChatMessage(id: response.id, content: text, dateCreated: Date(), sender: .chatGPT)
+            chatMessages.append(chatGPTMessage)
+        }
+        .store(in: &cancellables)
+    }
 }
-
 
 

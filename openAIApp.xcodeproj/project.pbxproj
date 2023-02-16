@@ -13,6 +13,12 @@
 		8031FE9B299D3FA5009F478E /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8031FE9A299D3FA5009F478E /* SingleMessageView.swift */; };
 		80419E77299D7FB20030D1B2 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E76299D7FB20030D1B2 /* UIView+Ext.swift */; };
 		80419E79299D83670030D1B2 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E78299D83670030D1B2 /* MenuCell.swift */; };
+		80419E7B299E77560030D1B2 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E7A299E77560030D1B2 /* OpenAIService.swift */; };
+		80419E7E299E781E0030D1B2 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 80419E7D299E781E0030D1B2 /* Alamofire */; };
+		80419E80299E7CCE0030D1B2 /* OpenAICompletions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E7F299E7CCE0030D1B2 /* OpenAICompletions.swift */; };
+		80419E82299E7D680030D1B2 /* OpenAICompletionsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E81299E7D680030D1B2 /* OpenAICompletionsResponse.swift */; };
+		80419E84299E89CA0030D1B2 /* ChatEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E83299E89CA0030D1B2 /* ChatEmptyStateView.swift */; };
+		80419E86299E8B290030D1B2 /* EmptyStatePointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80419E85299E8B290030D1B2 /* EmptyStatePointView.swift */; };
 		8090CD2329953D33009C18F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8090CD2229953D33009C18F2 /* AppDelegate.swift */; };
 		8090CD2529953D33009C18F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8090CD2429953D33009C18F2 /* SceneDelegate.swift */; };
 		8090CD2729953D33009C18F2 /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8090CD2629953D33009C18F2 /* MenuVC.swift */; };
@@ -30,6 +36,11 @@
 		8031FE9A299D3FA5009F478E /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
 		80419E76299D7FB20030D1B2 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		80419E78299D83670030D1B2 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
+		80419E7A299E77560030D1B2 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
+		80419E7F299E7CCE0030D1B2 /* OpenAICompletions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAICompletions.swift; sourceTree = "<group>"; };
+		80419E81299E7D680030D1B2 /* OpenAICompletionsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAICompletionsResponse.swift; sourceTree = "<group>"; };
+		80419E83299E89CA0030D1B2 /* ChatEmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEmptyStateView.swift; sourceTree = "<group>"; };
+		80419E85299E8B290030D1B2 /* EmptyStatePointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStatePointView.swift; sourceTree = "<group>"; };
 		8090CD1F29953D33009C18F2 /* openAIApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openAIApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8090CD2229953D33009C18F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8090CD2429953D33009C18F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80419E7E299E781E0030D1B2 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +78,8 @@
 			children = (
 				8031FE95299D3000009F478E /* ChatMessagesView.swift */,
 				8031FE9A299D3FA5009F478E /* SingleMessageView.swift */,
+				80419E83299E89CA0030D1B2 /* ChatEmptyStateView.swift */,
+				80419E85299E8B290030D1B2 /* EmptyStatePointView.swift */,
 			);
 			path = SwiftUIViews;
 			sourceTree = "<group>";
@@ -124,6 +138,7 @@
 				8090CD2B29953D34009C18F2 /* Assets.xcassets */,
 				8090CD2D29953D34009C18F2 /* LaunchScreen.storyboard */,
 				8090CD3029953D34009C18F2 /* Info.plist */,
+				80419E7A299E77560030D1B2 /* OpenAIService.swift */,
 			);
 			path = openAIApp;
 			sourceTree = "<group>";
@@ -144,6 +159,8 @@
 			isa = PBXGroup;
 			children = (
 				8090CD3C299540F5009C18F2 /* ChatMessage.swift */,
+				80419E7F299E7CCE0030D1B2 /* OpenAICompletions.swift */,
+				80419E81299E7D680030D1B2 /* OpenAICompletionsResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -195,6 +212,9 @@
 			dependencies = (
 			);
 			name = openAIApp;
+			packageProductDependencies = (
+				80419E7D299E781E0030D1B2 /* Alamofire */,
+			);
 			productName = openAIApp;
 			productReference = 8090CD1F29953D33009C18F2 /* openAIApp.app */;
 			productType = "com.apple.product-type.application";
@@ -223,6 +243,9 @@
 				Base,
 			);
 			mainGroup = 8090CD1629953D33009C18F2;
+			packageReferences = (
+				80419E7C299E781E0030D1B2 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 8090CD2029953D33009C18F2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -251,8 +274,10 @@
 			files = (
 				8090CD2729953D33009C18F2 /* MenuVC.swift in Sources */,
 				8031FE93299D2FD3009F478E /* ChatViewModel.swift in Sources */,
+				80419E7B299E77560030D1B2 /* OpenAIService.swift in Sources */,
 				80419E79299D83670030D1B2 /* MenuCell.swift in Sources */,
 				8090CD2329953D33009C18F2 /* AppDelegate.swift in Sources */,
+				80419E80299E7CCE0030D1B2 /* OpenAICompletions.swift in Sources */,
 				8090CD41299541DB009C18F2 /* ImageGenerationVC.swift in Sources */,
 				8031FE9B299D3FA5009F478E /* SingleMessageView.swift in Sources */,
 				8031FE96299D3000009F478E /* ChatMessagesView.swift in Sources */,
@@ -260,7 +285,10 @@
 				80419E77299D7FB20030D1B2 /* UIView+Ext.swift in Sources */,
 				8090CD3D299540F5009C18F2 /* ChatMessage.swift in Sources */,
 				8090CD3F2995419D009C18F2 /* ChatVC.swift in Sources */,
+				80419E86299E8B290030D1B2 /* EmptyStatePointView.swift in Sources */,
 				8031FE99299D34A9009F478E /* Constants.swift in Sources */,
+				80419E84299E89CA0030D1B2 /* ChatEmptyStateView.swift in Sources */,
+				80419E82299E7D680030D1B2 /* OpenAICompletionsResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +502,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		80419E7C299E781E0030D1B2 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		80419E7D299E781E0030D1B2 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80419E7C299E781E0030D1B2 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8090CD1729953D33009C18F2 /* Project object */;
 }
