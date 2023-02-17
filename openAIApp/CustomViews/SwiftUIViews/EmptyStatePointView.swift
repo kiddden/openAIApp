@@ -13,12 +13,11 @@ protocol EmptyStatePointViewDelegate {
 
 struct EmptyStatePointView: View {
     let text: String
-    var isTappable: Bool = false
-    var delegate: EmptyStatePointViewDelegate? = nil
+    var delegate: EmptyStatePointViewDelegate? = nil // Needed for examples block as options there are tappable
     
     var body: some View {
         VStack {
-            if isTappable, let delegate = delegate {
+            if let delegate = delegate {
                 Button {
                     delegate.didTapOnExample(text: text)
                 } label: {
@@ -36,9 +35,8 @@ struct EmptyStatePointView: View {
 }
 
 extension EmptyStatePointView {
-    init(text: String, isTappable: Bool, delegate: EmptyStatePointViewDelegate) {
+    init(text: String, delegate: EmptyStatePointViewDelegate) {
         self.text = text
-        self.isTappable = isTappable
         self.delegate = delegate
     }
 }

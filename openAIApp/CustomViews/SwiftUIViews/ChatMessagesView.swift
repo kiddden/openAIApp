@@ -9,49 +9,68 @@ import SwiftUI
 import Combine
 
 struct ChatMessagesView: View {
-    @State private var chatMessages: [ChatMessage] = []//ChatMessage.sampleMessages
+    @State private var chatMessages: [ChatMessage] = []
     @State private var messageText: String = ""
+    
     @State private var isSendButtonTapped = false
+    @State private var isLoadingResponse = false
     
-    @State var cancellables = Set<AnyCancellable>()
+    @State private var showAlert = false
     
-    let openAIService = OpenAIService()
+    @State private var cancellables = Set<AnyCancellable>()
+    
+    private let openAIService = OpenAIService()
     
     var body: some View {
         VStack(spacing: 0) {
             messagesView
                 .overlay(buttonPannelView, alignment: .bottom)
         }
-        
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Something went wrong"),
+                  message: Text("Please try again"),
+                  dismissButton: .default(Text("Got it!"), action: {
+                withAnimation {
+                    isLoadingResponse = false
+                    showAlert = false
+                }
+            }))
+        }
         .edgesIgnoringSafeArea(.bottom)
     }
     
     private var messagesView: some View {
-        VStack {
-            ScrollView {
-                if chatMessages.isEmpty {
-                    ChatEmptyStateView(delegate: self)
-                        .padding(.horizontal, 4)
-                        .padding(.bottom, Constants.scrollViewBottomPadding)
-                } else {
-                    ScrollViewReader { scrollView in
+        ScrollView {
+            ScrollViewReader { scrollView in
+                VStack(spacing: 0) {
+                    if chatMessages.isEmpty {
+                        ChatEmptyStateView(delegate: self)
+                            .padding(.horizontal, 4)
+                    } else {
                         ForEach(chatMessages, id: \.id) { message in
                             SingleMessageView(forMessage: message.content, sentAt: message.dateCreated, from: message.sender)
                                 .id(message.id)
-                                .padding(.bottom, message == chatMessages.last ? Constants.scrollViewBottomPadding : 0)
                         }
                         .onAppear {
                             scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
                         }
-                        .onChange(of: chatMessages) { _ in
-                            withAnimation {
-                                scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+                    }
+                    if isLoadingResponse {
+                        loadingView.id("loader")
+                            .onAppear {
+                                withAnimation { scrollView.scrollTo("loader", anchor: .center) }
                             }
-                        }
                     }
                 }
+                .padding(.bottom, Constants.scrollViewBottomPadding)
+                .onChange(of: chatMessages) { _ in
+                    withAnimation { scrollView.scrollTo(chatMessages.last?.id, anchor: .center) }
+                }
             }
-            .frame(minWidth: 0, maxWidth: .infinity)
+        }
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .onTapGesture {
+            self.hideKeyboard()
         }
     }
     
@@ -59,6 +78,8 @@ struct ChatMessagesView: View {
         HStack(spacing: 0) {
             TextField("Enter a message", text: $messageText)
                 .padding(.bottom)
+                .submitLabel(.send)
+                .keyboardType(.asciiCapable)
             
             Button {
                 if !messageText.isEmpty {
@@ -69,6 +90,7 @@ struct ChatMessagesView: View {
                         }
                     }
                     send(message: messageText)
+                    self.hideKeyboard()
                 }
             } label: {
                 Image(systemName: SFSymbols.send)
@@ -84,16 +106,35 @@ struct ChatMessagesView: View {
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Constants.bottomContainerCornerRadius))
     }
     
+    private var loadingView: some View {
+        HStack {
+            ProgressView()
+                .frame(width: 30, height: 30)
+//                .padding()
+            Text("AI is typing")
+                .opacity(0.7)
+                .font(.subheadline)
+        }
+    }
+    
     private func send(message: String) {
-        let userMessage = ChatMessage(id: UUID().uuidString, content: messageText, dateCreated: Date(), sender: .user)
+        withAnimation { isLoadingResponse = true }
+        let userMessage = ChatMessage(id: UUID().uuidString, content: message, dateCreated: Date(), sender: .user)
         chatMessages.append(userMessage)
         
         openAIService.send(message: messageText).sink { error in
-            print(error)
+            switch error {
+            case .finished: break
+            case .failure(_):
+                withAnimation { showAlert = true }
+                chatMessages.removeAll(where: { $0.content == userMessage.content })
+            }
         } receiveValue: { response in
             guard let text = response.choices.first?.text.trimmingCharacters(in: .whitespacesAndNewlines.union(.init(charactersIn: "\""))) else { return }
+            withAnimation { isLoadingResponse = false }
             let chatGPTMessage = ChatMessage(id: response.id, content: text, dateCreated: Date(), sender: .chatGPT)
             chatMessages.append(chatGPTMessage)
+            
         }
         .store(in: &cancellables)
         messageText = ""
@@ -115,14 +156,7 @@ struct ChatMessagesView_Previews: PreviewProvider {
 extension ChatMessagesView: EmptyStatePointViewDelegate {
     
     func didTapOnExample(text: String) {
-        openAIService.send(message: text).sink { error in
-            print(error)
-        } receiveValue: { response in
-            guard let text = response.choices.first?.text.trimmingCharacters(in: .whitespacesAndNewlines.union(.init(charactersIn: "\""))) else { return }
-            let chatGPTMessage = ChatMessage(id: response.id, content: text, dateCreated: Date(), sender: .chatGPT)
-            chatMessages.append(chatGPTMessage)
-        }
-        .store(in: &cancellables)
+        self.send(message: text)
     }
 }
 

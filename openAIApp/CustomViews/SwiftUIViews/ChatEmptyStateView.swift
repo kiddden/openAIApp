@@ -33,7 +33,7 @@ struct ChatEmptyStateView: View {
         VStack {
             configureViewWith(text: EmptyStateOptions.examples, image: SFSymbols.examplesImage)
             ForEach(EmptyStateOptions.examplesOptions, id: \.self) { text in
-                EmptyStatePointView(text: text, isTappable: true, delegate: delegate)
+                EmptyStatePointView(text: text, delegate: delegate)
             }
         }
     }

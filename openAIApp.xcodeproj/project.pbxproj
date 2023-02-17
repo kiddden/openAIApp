@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		802C1BBE299FE3B2001E2F56 /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802C1BBD299FE3B2001E2F56 /* View+Ext.swift */; };
 		8031FE93299D2FD3009F478E /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8031FE92299D2FD3009F478E /* ChatViewModel.swift */; };
 		8031FE96299D3000009F478E /* ChatMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8031FE95299D3000009F478E /* ChatMessagesView.swift */; };
 		8031FE99299D34A9009F478E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8031FE98299D34A9009F478E /* Constants.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		802C1BBD299FE3B2001E2F56 /* View+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ext.swift"; sourceTree = "<group>"; };
 		8031FE92299D2FD3009F478E /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		8031FE95299D3000009F478E /* ChatMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesView.swift; sourceTree = "<group>"; };
 		8031FE98299D34A9009F478E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				80419E76299D7FB20030D1B2 /* UIView+Ext.swift */,
+				802C1BBD299FE3B2001E2F56 /* View+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -127,6 +130,7 @@
 		8090CD2129953D33009C18F2 /* openAIApp */ = {
 			isa = PBXGroup;
 			children = (
+				80C088EC299FDDDA007FA626 /* Services */,
 				80419E75299D7F970030D1B2 /* Extensions */,
 				8031FE97299D3496009F478E /* Utilities */,
 				8031FE91299D2FC0009F478E /* ViewModels */,
@@ -138,7 +142,6 @@
 				8090CD2B29953D34009C18F2 /* Assets.xcassets */,
 				8090CD2D29953D34009C18F2 /* LaunchScreen.storyboard */,
 				8090CD3029953D34009C18F2 /* Info.plist */,
-				80419E7A299E77560030D1B2 /* OpenAIService.swift */,
 			);
 			path = openAIApp;
 			sourceTree = "<group>";
@@ -194,6 +197,14 @@
 			children = (
 			);
 			path = Containers;
+			sourceTree = "<group>";
+		};
+		80C088EC299FDDDA007FA626 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				80419E7A299E77560030D1B2 /* OpenAIService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,6 +285,7 @@
 			files = (
 				8090CD2729953D33009C18F2 /* MenuVC.swift in Sources */,
 				8031FE93299D2FD3009F478E /* ChatViewModel.swift in Sources */,
+				802C1BBE299FE3B2001E2F56 /* View+Ext.swift in Sources */,
 				80419E7B299E77560030D1B2 /* OpenAIService.swift in Sources */,
 				80419E79299D83670030D1B2 /* MenuCell.swift in Sources */,
 				8090CD2329953D33009C18F2 /* AppDelegate.swift in Sources */,
