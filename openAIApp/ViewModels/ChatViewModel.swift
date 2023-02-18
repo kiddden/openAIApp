@@ -9,13 +9,12 @@ import Foundation
 import Combine
 
 class ChatMessagesViewModel: ObservableObject {
-    @Published private(set) var chatMessages: [ChatMessage] = []
+    @Published private(set) var chatMessages: [Message] = []
     @Published var messageText: String = ""
     
     @Published var isLoadingResponse = false
     @Published var showAlert = false
     
-    private let openAIService = OpenAIService()
     private var cancellables = Set<AnyCancellable>()
     
     func send(message: String) {
@@ -23,24 +22,24 @@ class ChatMessagesViewModel: ObservableObject {
             return
         }
         isLoadingResponse = true
-        let userMessage = ChatMessage(id: UUID().uuidString, content: message, dateCreated: Date(), sender: .user)
+        let userMessage = Message(id: UUID().uuidString, content: message, dateCreated: Date(), sender: .user)
         chatMessages.append(userMessage)
         
-        openAIService.send(message: message)
+        OpenAIService.shared.send(message: message)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
                     self?.isLoadingResponse = false
                 case .failure:
                     self?.showAlert = true
-                    self?.chatMessages.removeAll(where: { $0.content == userMessage.content })
+                    self?.chatMessages.removeAll(where: { $0.id == userMessage.id })
                     self?.isLoadingResponse = false
                 }
             }, receiveValue: { [weak self] response in
                 guard let text = response.choices.first?.text.trimmingCharacters(in: .whitespacesAndNewlines.union(.init(charactersIn: "\""))) else {
                     return
                 }
-                let chatGPTMessage = ChatMessage(id: response.id, content: text, dateCreated: Date(), sender: .chatGPT)
+                let chatGPTMessage = Message(id: response.id, content: text, dateCreated: Date(), sender: .ai)
                 self?.chatMessages.append(chatGPTMessage)
             })
             .store(in: &cancellables)

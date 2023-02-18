@@ -24,16 +24,16 @@ struct SingleMessageView: View {
             
             VStack(alignment: .trailing, spacing: 0) {
                 Text(message)
-                    .foregroundColor(sender == .user ? .white : .black)
+                    .foregroundColor(sender == .user ? .white : nil)
                     .padding()
-                    .background(sender == .user ? Color(.systemPurple) : .gray.opacity(0.1))
+                    .background(sender == .user ? Color(Colors.ourPurple) : Color(Colors.aiChatMessageColor))
                     .cornerRadius(16)
                 Text("15:20")
                     .foregroundColor(.black.opacity(0.5))
                     .font(.caption2)
             }
             
-            if sender == .chatGPT { Spacer() }
+            if sender == .ai { Spacer() }
         }
         .padding(.horizontal, 4)
     }

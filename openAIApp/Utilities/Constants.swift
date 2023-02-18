@@ -47,3 +47,10 @@ enum EmptyStateOptions {
         "Limited knowledge of world and events after 2021",
     ]
 }
+
+enum Colors {
+    static let aiChatMessageColor = "aiChatMessageColor"
+    static let ourPurple = "purple"
+    static let menuLabelColor = "menuCellLabelTextColor"
+    static let ourGreen = "green"
+}

@@ -20,9 +20,7 @@ class MenuVC: UIViewController {
     private func configureVC() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
-        view.backgroundColor = .systemPurple
         navigationItem.title = "Open AI App"
-//        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func configureTableView() {

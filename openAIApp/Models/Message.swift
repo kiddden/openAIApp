@@ -8,10 +8,10 @@
 import Foundation
 
 enum MessageSender {
-    case user, chatGPT
+    case user, ai
 }
 
-struct ChatMessage: Equatable {
+struct Message: Equatable {
     let id: String
     let content: String
     let dateCreated: Date

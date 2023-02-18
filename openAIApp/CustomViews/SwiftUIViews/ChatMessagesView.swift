@@ -18,13 +18,7 @@ struct ChatMessagesView: View {
             messagesView
                 .overlay(buttonPannelView, alignment: .bottom)
         }
-        .alert(isPresented: $viewModel.showAlert) {
-            Alert(title: Text("Something went wrong"),
-                  message: Text("Please try again"),
-                  dismissButton: .default(Text("Got it!"), action: {
-                withAnimation { viewModel.isLoadingResponse = false }
-            }))
-        }
+        .alert(isPresented: $viewModel.showAlert) { errorAlert }
         .ignoresSafeArea(.keyboard)
         .edgesIgnoringSafeArea(.bottom)
     }
@@ -45,6 +39,7 @@ struct ChatMessagesView: View {
                             scrollView.scrollTo(viewModel.chatMessages.last?.id, anchor: .bottom)
                         }
                     }
+                    
                     if viewModel.isLoadingResponse {
                         loadingView.id("loader")
                             .onAppear {
@@ -52,6 +47,7 @@ struct ChatMessagesView: View {
                             }
                     }
                 }
+                .padding(.top)
                 .padding(.bottom, Constants.scrollViewBottomPadding)
                 .onChange(of: viewModel.chatMessages) { _ in
                     withAnimation { scrollView.scrollTo(viewModel.chatMessages.last?.id, anchor: .center) }
@@ -99,11 +95,18 @@ struct ChatMessagesView: View {
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Constants.bottomContainerCornerRadius))
     }
     
+    private var errorAlert: Alert {
+        Alert(title: Text("Something went wrong"),
+              message: Text("Please try again"),
+              dismissButton: .default(Text("Got it!"), action: {
+            withAnimation { viewModel.isLoadingResponse = false }
+        }))
+    }
+    
     private var loadingView: some View {
         HStack {
             ProgressView()
                 .frame(width: 30, height: 30)
-//                .padding()
             Text("AI is typing")
                 .opacity(0.7)
                 .font(.subheadline)

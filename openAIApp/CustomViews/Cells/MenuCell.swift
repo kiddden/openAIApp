@@ -33,7 +33,7 @@ class MenuCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 18)
 
-        label.textColor = .black
+        label.textColor = UIColor(named: Colors.menuLabelColor)
         return label
     }()
     
@@ -95,12 +95,12 @@ class MenuCell: UITableViewCell {
             sfSymbolView.image = UIImage(systemName: SFSymbols.messages)
             titleLabel.text = MenuItems.chatGPT
             descriptionLabel.text = MenuItems.chatGPTDescription
-            symbolContainerView.backgroundColor = .systemPurple
+            symbolContainerView.backgroundColor = UIColor(named: Colors.ourPurple)
         } else {
             sfSymbolView.image = UIImage(systemName: SFSymbols.image)
             titleLabel.text = MenuItems.imageGeneration
             descriptionLabel.text = MenuItems.imageGenerationDescription
-            symbolContainerView.backgroundColor = .systemGreen
+            symbolContainerView.backgroundColor = UIColor(named: Colors.ourGreen)
         }
     }
 }
