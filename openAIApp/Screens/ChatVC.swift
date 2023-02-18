@@ -23,6 +23,14 @@ class ChatVC: UIViewController {
         title = "Chat"
         navigationController?.navigationBar.tintColor = .systemPurple
         
+        // Fixing bug with transparent nav bar when keyboard is up
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithDefaultBackground()
+        navigationItem.scrollEdgeAppearance = navigationBarAppearance
+        navigationItem.standardAppearance = navigationBarAppearance
+        navigationItem.compactAppearance = navigationBarAppearance
+        navigationController?.setNeedsStatusBarAppearanceUpdate()
+        
         // Configuring SwiftUI View
         let messagesView = UIHostingController(rootView: ChatMessagesView())
         addChild(messagesView)

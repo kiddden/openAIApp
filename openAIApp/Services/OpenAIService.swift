@@ -10,7 +10,7 @@ import Combine
 
 class OpenAIService {
     let baseURL = "https://api.openai.com/v1/completions"
-    let APIKey = "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"
+    let APIKey = " "
     
     func send(message: String) -> AnyPublisher<OpenAICompletionsResponse, Error> {
         let body = OpenAICompletionsBody(model: "text-davinci-003", prompt: message, max_tokens: 2048, temperature: 0.5)

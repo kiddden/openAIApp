@@ -9,33 +9,23 @@ import SwiftUI
 import Combine
 
 struct ChatMessagesView: View {
-    @State private var chatMessages: [ChatMessage] = []
-    @State private var messageText: String = ""
+    @StateObject private var viewModel = ChatMessagesViewModel()
     
     @State private var isSendButtonTapped = false
-    @State private var isLoadingResponse = false
-    
-    @State private var showAlert = false
-    
-    @State private var cancellables = Set<AnyCancellable>()
-    
-    private let openAIService = OpenAIService()
     
     var body: some View {
         VStack(spacing: 0) {
             messagesView
                 .overlay(buttonPannelView, alignment: .bottom)
         }
-        .alert(isPresented: $showAlert) {
+        .alert(isPresented: $viewModel.showAlert) {
             Alert(title: Text("Something went wrong"),
                   message: Text("Please try again"),
                   dismissButton: .default(Text("Got it!"), action: {
-                withAnimation {
-                    isLoadingResponse = false
-                    showAlert = false
-                }
+                withAnimation { viewModel.isLoadingResponse = false }
             }))
         }
+        .ignoresSafeArea(.keyboard)
         .edgesIgnoringSafeArea(.bottom)
     }
     
@@ -43,19 +33,19 @@ struct ChatMessagesView: View {
         ScrollView {
             ScrollViewReader { scrollView in
                 VStack(spacing: 0) {
-                    if chatMessages.isEmpty {
-                        ChatEmptyStateView(delegate: self)
+                    if viewModel.chatMessages.isEmpty {
+                        ChatEmptyStateView(delegate: viewModel)
                             .padding(.horizontal, 4)
                     } else {
-                        ForEach(chatMessages, id: \.id) { message in
+                        ForEach(viewModel.chatMessages, id: \.id) { message in
                             SingleMessageView(forMessage: message.content, sentAt: message.dateCreated, from: message.sender)
                                 .id(message.id)
                         }
                         .onAppear {
-                            scrollView.scrollTo(chatMessages.last?.id, anchor: .bottom)
+                            scrollView.scrollTo(viewModel.chatMessages.last?.id, anchor: .bottom)
                         }
                     }
-                    if isLoadingResponse {
+                    if viewModel.isLoadingResponse {
                         loadingView.id("loader")
                             .onAppear {
                                 withAnimation { scrollView.scrollTo("loader", anchor: .center) }
@@ -63,8 +53,8 @@ struct ChatMessagesView: View {
                     }
                 }
                 .padding(.bottom, Constants.scrollViewBottomPadding)
-                .onChange(of: chatMessages) { _ in
-                    withAnimation { scrollView.scrollTo(chatMessages.last?.id, anchor: .center) }
+                .onChange(of: viewModel.chatMessages) { _ in
+                    withAnimation { scrollView.scrollTo(viewModel.chatMessages.last?.id, anchor: .center) }
                 }
             }
         }
@@ -76,20 +66,23 @@ struct ChatMessagesView: View {
     
     private var buttonPannelView: some View {
         HStack(spacing: 0) {
-            TextField("Enter a message", text: $messageText)
+            TextField("Enter a message", text: $viewModel.messageText)
                 .padding(.bottom)
                 .submitLabel(.send)
                 .keyboardType(.asciiCapable)
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                    viewModel.send(message: viewModel.messageText)
+                }
             
             Button {
-                if !messageText.isEmpty {
+                if !viewModel.messageText.isEmpty {
                     withAnimation {
                         isSendButtonTapped = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                             isSendButtonTapped = false
                         }
                     }
-                    send(message: messageText)
+                    viewModel.send(message: viewModel.messageText)
                     self.hideKeyboard()
                 }
             } label: {
@@ -117,29 +110,6 @@ struct ChatMessagesView: View {
         }
     }
     
-    private func send(message: String) {
-        withAnimation { isLoadingResponse = true }
-        let userMessage = ChatMessage(id: UUID().uuidString, content: message, dateCreated: Date(), sender: .user)
-        chatMessages.append(userMessage)
-        
-        openAIService.send(message: messageText).sink { error in
-            switch error {
-            case .finished: break
-            case .failure(_):
-                withAnimation { showAlert = true }
-                chatMessages.removeAll(where: { $0.content == userMessage.content })
-            }
-        } receiveValue: { response in
-            guard let text = response.choices.first?.text.trimmingCharacters(in: .whitespacesAndNewlines.union(.init(charactersIn: "\""))) else { return }
-            withAnimation { isLoadingResponse = false }
-            let chatGPTMessage = ChatMessage(id: response.id, content: text, dateCreated: Date(), sender: .chatGPT)
-            chatMessages.append(chatGPTMessage)
-            
-        }
-        .store(in: &cancellables)
-        messageText = ""
-    }
-    
     private enum Constants {
         static let sendButtonSize: CGFloat = 32
         static let bottomContainerCornerRadius: CGFloat = 16
@@ -150,13 +120,6 @@ struct ChatMessagesView: View {
 struct ChatMessagesView_Previews: PreviewProvider {
     static var previews: some View {
         ChatMessagesView()
-    }
-}
-
-extension ChatMessagesView: EmptyStatePointViewDelegate {
-    
-    func didTapOnExample(text: String) {
-        self.send(message: text)
     }
 }
 
