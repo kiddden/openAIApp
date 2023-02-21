@@ -53,4 +53,5 @@ enum Colors {
     static let ourPurple = "purple"
     static let menuLabelColor = "menuCellLabelTextColor"
     static let ourGreen = "green"
+    static let multilineTextFieldText = "textFieldTextColor"
 }

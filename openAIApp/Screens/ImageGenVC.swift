@@ -257,7 +257,7 @@ extension ImageGenerationVC: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if multilineTextField.text == placholder {
             multilineTextField.text = ""
-            multilineTextField.textColor = UIColor.black
+            multilineTextField.textColor = UIColor(named: Colors.multilineTextFieldText)
         }
     }
     
