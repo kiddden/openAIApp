@@ -30,6 +30,8 @@
 		8090CD3D299540F5009C18F2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8090CD3C299540F5009C18F2 /* Message.swift */; };
 		8090CD3F2995419D009C18F2 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8090CD3E2995419D009C18F2 /* ChatVC.swift */; };
 		8090CD41299541DB009C18F2 /* ImageGenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8090CD40299541DB009C18F2 /* ImageGenVC.swift */; };
+		80F940D229A52D5F004AB1D9 /* IGContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F940D129A52D5F004AB1D9 /* IGContainerView.swift */; };
+		80F940D429A55384004AB1D9 /* UIViewContoller+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F940D329A55384004AB1D9 /* UIViewContoller+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,8 @@
 		8090CD3C299540F5009C18F2 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		8090CD3E2995419D009C18F2 /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		8090CD40299541DB009C18F2 /* ImageGenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGenVC.swift; sourceTree = "<group>"; };
+		80F940D129A52D5F004AB1D9 /* IGContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IGContainerView.swift; sourceTree = "<group>"; };
+		80F940D329A55384004AB1D9 /* UIViewContoller+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewContoller+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,7 @@
 			children = (
 				80419E76299D7FB20030D1B2 /* UIView+Ext.swift */,
 				802C1BBD299FE3B2001E2F56 /* View+Ext.swift */,
+				80F940D329A55384004AB1D9 /* UIViewContoller+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 		8047002A29A15F87006278D5 /* TextCompletions */ = {
 			isa = PBXGroup;
 			children = (
+				8090CD3C299540F5009C18F2 /* Message.swift */,
 				80419E7F299E7CCE0030D1B2 /* OpenAICompletionsBody.swift */,
 				80419E81299E7D680030D1B2 /* OpenAICompletionsResponse.swift */,
 			);
@@ -171,11 +177,9 @@
 		8090CD3629953E1D009C18F2 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				80F940D029A52D56004AB1D9 /* Views */,
 				80419E72299D7C1F0030D1B2 /* Cells */,
 				8031FE94299D2FEA009F478E /* SwiftUIViews */,
-				8090CD3B29953E85009C18F2 /* Containers */,
-				8090CD3A29953E5A009C18F2 /* Buttons */,
-				8090CD3929953E52009C18F2 /* MessageCells */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -183,7 +187,6 @@
 		8090CD3729953E26009C18F2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				8090CD3C299540F5009C18F2 /* Message.swift */,
 				8047002B29A15F94006278D5 /* ImageGeneration */,
 				8047002A29A15F87006278D5 /* TextCompletions */,
 			);
@@ -200,33 +203,20 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
-		8090CD3929953E52009C18F2 /* MessageCells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = MessageCells;
-			sourceTree = "<group>";
-		};
-		8090CD3A29953E5A009C18F2 /* Buttons */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Buttons;
-			sourceTree = "<group>";
-		};
-		8090CD3B29953E85009C18F2 /* Containers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Containers;
-			sourceTree = "<group>";
-		};
 		80C088EC299FDDDA007FA626 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				80419E7A299E77560030D1B2 /* OpenAIService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		80F940D029A52D56004AB1D9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				80F940D129A52D5F004AB1D9 /* IGContainerView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -320,9 +310,11 @@
 				8090CD2529953D33009C18F2 /* SceneDelegate.swift in Sources */,
 				80419E77299D7FB20030D1B2 /* UIView+Ext.swift in Sources */,
 				8090CD3D299540F5009C18F2 /* Message.swift in Sources */,
+				80F940D229A52D5F004AB1D9 /* IGContainerView.swift in Sources */,
 				8090CD3F2995419D009C18F2 /* ChatVC.swift in Sources */,
 				80419E86299E8B290030D1B2 /* EmptyStatePointView.swift in Sources */,
 				8031FE99299D34A9009F478E /* Constants.swift in Sources */,
+				80F940D429A55384004AB1D9 /* UIViewContoller+Ext.swift in Sources */,
 				80419E84299E89CA0030D1B2 /* ChatEmptyStateView.swift in Sources */,
 				80419E82299E7D680030D1B2 /* OpenAICompletionsResponse.swift in Sources */,
 			);

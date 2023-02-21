@@ -31,6 +31,7 @@ class MenuVC: UIViewController {
         tableView.separatorStyle = .none
         
         tableView.register(MenuCell.self, forCellReuseIdentifier: "MenuCell")
+        tableView.backgroundColor = .secondarySystemBackground
         
         view.addSubview(tableView)
         
