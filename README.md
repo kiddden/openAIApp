@@ -1,6 +1,6 @@
 # openAIApp
 
-An app that allows you to try OpenAI text completions and image generation features using simple iOS app.
+An app that lets you try OpenAI text completions and image generation features using a simple iOS app.
 
 ### Warning
 
@@ -33,7 +33,7 @@ class OpenAIService {
 #### Chat screen
 - [x] ~~Live communication with model~~
 - [x] ~~Error handling with alerts~~ 
-- Settings section with ability to change model of completions and temperature(changing the determinacy of answers of the AI)
+- Settings section with the ability to change the model of completions and temperature(changing the determinacy of answers of the AI)
 - Saving the chat history
 - Ability to create multiple chat sessions
 
