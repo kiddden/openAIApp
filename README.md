@@ -33,15 +33,18 @@ class OpenAIService {
 #### Chat screen
 - [x] ~~Live communication with model~~
 - [x] ~~Error handling with alerts~~ 
-- Settings section with the ability to change the model of completions and temperature(changing the determinacy of answers of the AI)
-- Saving the chat history
-- Ability to create multiple chat sessions
+- [ ] Editing already sent messages
+- [ ] Regenerating response
+- [ ] Settings section with the ability to change the model of completions and temperature(changing the determinacy of answers of the AI)
+- [ ] Saving the chat history
+- [ ] Ability to create multiple chat sessions
 
 #### Image generation screen
 - [x] ~~Generating images~~ 
 - [x] ~~Error handling with alerts~~ 
-- Saving\sharing images
-- Ability to generate more than one image at once
+- [ ] Regenerating image
+- [ ] Saving\sharing images
+- [ ] Ability to generate more than one image at once
 
 #### Overall
 - [x] ~~Dark theme~~
