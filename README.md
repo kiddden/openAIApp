@@ -10,7 +10,7 @@ Despite the fact that the widely known ChatGPT was also made by OpenAI company, 
 
 In order to make this app running, you should finish a couple of steps:
 - Create OpenAI account;
-- Generate private API key on OpenAI website;
+- Generate private API key on [OpenAI](https://openai.com/api/) website;
 - In the project, navigate to "openAIapp - Services - OpenAIService.swift" and change the empty APIKey field to your own.
 ```swift
 class OpenAIService {
